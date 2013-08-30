@@ -1,0 +1,171 @@
+body{
+	font-family: "Helvetica Neue", Helvetica;
+	margin:0px;
+	background-color: #E3E3E3;
+}
+form {
+	margin-bottom: 0;
+}
+a {
+	text-decoration: none;
+}
+.buttonwrapper {
+	float: left;
+	width: 0px;
+}
+.button{
+	display: block;
+	font-size: 14px;
+	width: 130px;
+	height: 20px;
+	background: #1B1B1B;
+	padding: 5px;
+	text-align: center;
+	color: #999999;
+	text-decoration: none;
+	border: 1px solid #969696;
+	margin-top: -1px;
+}
+.button:hover{
+	border-color:red;
+	color: white;
+	text-decoration: none;
+	z-index:10;
+}
+
+#status{
+	display: none;
+	overflow: hidden;
+	clear: both;
+}
+#pi-span{
+	color: #E30B5C;
+}
+#top{
+	/*width: 80%;*/
+	min-width: 600px;
+	margin: auto;
+	background-color: white;
+}
+#content{
+	/*margin: 0 10px;*/
+}
+
+/*-------------------- BEGIN HEADER -----------------*/
+#header{
+	height: 80px;
+	background: url("images/jumbotron.jpg") repeat center center;
+}
+#logo-area{
+	float: left;
+	margin-left: 14px;
+}
+#logo-link{
+	color: white;
+	text-decoration: none;
+}
+#search-btn{
+	background-color: 555555;
+	padding: 5px 10px;
+	position: relative;
+	top: 7px;
+}
+#search-area{
+	float: right;
+	position: relative;
+	top: 24px;
+	margin-right:10px;
+}
+#searchbox{
+	height: 23px;
+}
+.ribbon {
+	height: 15px;
+	background-color: #f5f5f5;
+	border-bottom: 1px solid #ddd;
+}
+/*-------------------- END HEADER -----------------*/
+#uptime {
+	text-align: center;
+	font-size: 14;
+	color: #999999;
+	padding: 10px 15px;
+	float:right;
+}
+
+/*-------------------- START NAV -----------------*/
+.navbar-inner{
+	background-image: linear-gradient(to bottom, #222222, #111111);
+	-webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+	box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+	border: 1px solid #252525;
+	min-height:40px;
+}
+.cont {
+	width: 80%;
+	margin: 0 auto;
+	min-width: 600px;
+	overflow: hidden;
+}
+.nav {
+	margin: 0;
+	-webkit-padding-start: 0;
+}
+.nav > li {
+	float: left;
+}
+.nav > li > a {
+	display: block;
+	color: #999999;
+	padding: 10px 15px;
+	font-size: 13px;
+}
+.nav > li > a:hover {
+	color: white;
+}
+/*-------------------- END NAV -----------------*/
+/*-------------------- BEGIN STATS -----------------*/
+.statssection {
+	width: 50%;
+	margin: 0 auto;
+}
+.statssection1 , .cpubox{
+	position: relative;
+	left: 25%;
+}
+.piecontainer {
+	float: left;
+	padding: 10px;
+}
+.notlast {
+	border-right: 1px solid #D8D8D8;
+}
+.pietext {
+	text-align: center;
+	font-size: 12px;
+	margin-top: 7px;
+	border-top: 1px solid #D8D8D8;
+}
+.easyPieChart {
+	margin: 0 auto;
+}
+
+.statwrapper { 
+	float:left;
+	position: relative;
+	left: 50%;
+}
+
+.cpubox {
+	float: left;
+	padding: 10px;
+	margin-bottom: 10px;
+	border: 1px solid #D8D8D8;
+	border-radius: 3px;
+	position: relative;
+	left: -50%;
+}
+/*-------------------- END STATS -----------------*/
+
+
