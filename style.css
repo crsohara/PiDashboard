@@ -39,8 +39,19 @@ a {
 	overflow: hidden;
 	clear: both;
 }
+.pilogo {
+	position: relative;
+}
 #pi-span{
 	color: #E30B5C;
+	letter-spacing: -18;
+	text-shadow: 3px 0 3px rgba(0,0,0,0.1),2px 0 2px rgba(0,0,0,0.1),1px 0 1px rgba(0,0,0,0.1);
+	font-size: 80px;
+}
+#pi-spa {
+	letter-spacing: -22;
+	text-shadow: 3px 0 3px rgba(0,0,0,0.1),2px 0 2px rgba(0,0,0,0.1),1px 0 1px rgba(0,0,0,0.1);
+	font-size: 80px;
 }
 #top{
 	/*width: 80%;*/
@@ -54,12 +65,14 @@ a {
 
 /*-------------------- BEGIN HEADER -----------------*/
 #header{
-	height: 80px;
+	height: 160px;
 	background: url("images/jumbotron.jpg") repeat center center;
 }
 #logo-area{
 	float: left;
 	margin-left: 14px;
+	margin-top: 0px;
+	width: 33%;
 }
 #logo-link{
 	color: white;
@@ -72,10 +85,12 @@ a {
 	top: 7px;
 }
 #search-area{
+	width: 33%;
 	float: right;
 	position: relative;
-	top: 24px;
-	margin-right:10px;
+	top: -65px;
+	margin-right: 10px;
+	text-align: right;
 }
 #searchbox{
 	height: 23px;
@@ -168,5 +183,28 @@ a {
 	left: -50%;
 }
 /*-------------------- END STATS -----------------*/
+/*-------------------- START WEATHER -----------------*/
+.weather {
+	width: 33%;
+	float: right;
+    position: relative;
+    top: 0px;
+    right: 50%;/*489px;*/
+}
+.weather2 {
+	float: right;
+	position: relative;
+	right: -50%;
+}
+#weatherlabel {
+    position:  relative;
+    color: white;
+    top: -30px;
+    /*left: 532px;*/
+    font-size: 30px;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
+
+}
+/*-------------------- END WEATHER -----------------*/
 
 

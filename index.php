@@ -180,7 +180,24 @@
 	<div id="header">
 		<div class="cont">
 			<div id="logo-area">
-				<h1><a href="javascript:void(0);" id="logo-link"><span id="pi-span">Pi</span> Dashboard</a></h1>
+				<h1><a href="javascript:void(0);" id="logo-link">
+				<span class="pilogo" id="pi-span" style="z-index:11;">P</span>
+				<span class="pilogo" id="pi-span" style="z-index:10;">i </span>
+				<span class="pilogo" id="pi-spa" style="z-index:9;">D</span>
+				<span class="pilogo" id="pi-spa" style="z-index:8;">a</span>
+				<span class="pilogo" id="pi-spa" style="z-index:7;">s</span>
+				<span class="pilogo" id="pi-spa" style="z-index:6;">h</span>
+				<span class="pilogo" id="pi-spa" style="z-index:5;">b</span>
+				<span class="pilogo" id="pi-spa" style="z-index:4;">o</span>
+				<span class="pilogo" id="pi-spa" style="z-index:3;">a</span>
+				<span class="pilogo" id="pi-spa" style="z-index:2;">r</span>
+				<span class="pilogo" id="pi-spa" style="z-index:1;">d</span></a></h1>
+			</div>
+			<div class="weather">
+				<div class="weather2">
+					<img src="images/tick_weather_icons/cloudy1.png">
+					<label id="weatherlabel">Sunny, 26°c</label>
+				</div>
 			</div>
 			<div id="search-area">
 				<form id="search-form" action="search.php" method="GET">
@@ -194,7 +211,7 @@
 	</div>
 <br>
 	<div class="cont" id="menu">
-
+	
 		<div class="statwrapper">
 			<div class="cpubox">
 				<div class="piecontainer notlast">
