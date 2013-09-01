@@ -5,9 +5,10 @@
 <link rel="icon" href="images/favicon.ico" type="image/x-ico">
 	<link rel="stylesheet" type="text/css" href="style.css">
 	
+	
+	
 	<script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
 	<!--<script language="javascript" type="text/javascript" src="87.198.20.15/jquery-2.0.3.min.js">-->
-	
 	
 	<!-- pnotify -->
 	<script src="pnotify-1.2.0/jquery.pnotify.js" type="text/javascript"></script>
@@ -24,130 +25,9 @@
 	<script type="text/javascript" src="piechart/jquery.easy-pie-chart.js"></script>
 	<link rel="stylesheet"type="text/css" href="piechart/jquery.easy-pie-chart.css">
 	
+	<script language="javascript" type="text/javascript" src="js/functions.js"></script>
 	
-	<script>
-	//disable notification history
-	$.pnotify.defaults.history = false;	
-
-	//initial set up of pie charts
-	$(function() {
-		$('.chart').easyPieChart({
-			 barColor: function(percent) {
-					percent /= 100;
-					return "rgb(" + Math.round(255 * percent) + ", " + Math.round(255 * (1-percent)) + ", 0)";
-			},
-			lineWidth: 5,
-			size: 60,
-			animate: 1000,
-			scaleColor: false,
-			lineCap: 'square',
-			onStep: function(value) {
-					this.$el.find('span').text(~~value);
-			}
-		});
-	});
 	
-	//add listener to stats button
-	$(function() {
-		$('#show-status-btn').click(function() {
-				if($("#status").attr("style") == "display:block;")
-				{
-					$("#status").attr("style", "display:none;");
-				}
-				else
-				{
-					getStatusFromServer();
-				}
-			return false;
-		});
-	});
-	
-	//uptime async ajax call - every 30 seconds
-	getuptime();
-	setInterval(function (){getuptime();}, 30000);
-	function getuptime() {
-		$.ajax({
-			url: 'getuptime.php',
-			type: 'get',
-			dataType: 'html',
-			async: true,
-			success: function(data) {
-				$('#uptime').html('Pi uptime: '+data);
-			} 
-		});
-	}
-	
-	//cpu and ram async ajax call - every 3 seconds
-	call();
-	setInterval(function () { call(); }, 3000);
-
-	function call() {
-		if(!$('#Chckbox').is(":checked")) {
-			var cpureq = $.ajax({
-				url: 'getcpu.php',
-				type: 'get',
-				dataType: 'html',
-				async: true,
-				success: function(data) {
-					$vars = data.split(':');
-					$("#cpuid").data('easyPieChart').update($vars[0]);
-					$("#cputemp").data('easyPieChart').update($vars[1]);
-					$("#freemem").data('easyPieChart').update($vars[2]);
-				} 
-			});
-		}
-	}
-
-	//status async ajax call
-	function getStatusFromServer() {
-		$.pnotify({
-			title: 'Generating stats',
-			text: 'Please Wait...',
-		});
-		var req = $.ajax({
-			url: 'stats.php',
-			type: 'get',
-			dataType: 'html',
-			async: true,
-			success: function(data) {
-				//result = data;
-				printstats(data);
-				$.pnotify({
-				title: 'Success',
-				text: 'Stats generated successfully',
-				type: 'success'
-			});
-			}
-		 });
-		/*req.done(function( response) {
-			$.pnotify({
-				title: 'Success',
-				text: 'Stats generated successfully',
-				type: 'success'
-			});
-			*/
-	};
-
-	//print stats to page
-	function printstats(data){
-		$("#status").attr("style", "display:block;").html(data);
-		
-		$(function() {
-			$('.chart').easyPieChart({
-				barColor: function(percent) {
-					percent /= 100;
-					return "rgb(" + Math.round(255 * (1-percent)) + ", " + Math.round(255 * percent) + ", 0)";
-				},
-				trackColor: false,
-				animate: 1000,
-				scaleColor: false,
-				lineCap: 'square'
-			});
-			
-		});
-	}
-
-	</script>
 </head>
 <body>
 	
@@ -155,7 +35,7 @@
 	<div class="navbar-inner">
 		<div class="cont">
 			<ul class="nav">
-				<li class>
+				<!--<li class>
 					<a href="javascript:;" onclick="document.getElementById('movieform').submit();">Movies</a>
 				</li>
 				<li class>
@@ -163,6 +43,9 @@
 				</li>
 				<li class>
 					<a href=#  id="xxx">Music</a>
+				</li>-->
+				<li class>
+					<label id="time"></label>
 				</li>
 				<li class>
 					<a href="#" id="show-status-btn" >Stats</a>
@@ -193,16 +76,26 @@
 				<span class="pilogo" id="pi-spa" style="z-index:2;">r</span>
 				<span class="pilogo" id="pi-spa" style="z-index:1;">d</span></a></h1>
 			</div>
-			<div class="weather">
+			
+			<div class="weather" style="display:none">
 				<div class="weather2">
-					<img src="images/tick_weather_icons/cloudy1.png">
-					<label id="weatherlabel">Sunny, 26°c</label>
+					<div id="weatherimg">
+						<img src="images/tick_weather_icons/cloudy1.png">
+					</div>
+					<div id="weatherdetails">	
+						<ul class="wlist">
+							<li>
+								<label class="weatherlabel" id="weatherlabel"></label>
+							</li>
+							<li>
+								<label class="weatherlabel" id="weatherloc">Helsinki, FI</label>
+							</li>
+							<li>
+								<label class="weatherlabel" id="weatherupdated">Last updated: 20:00</label>
+							</li>
+						</ul>
+					</div>
 				</div>
-			</div>
-			<div id="search-area">
-				<form id="search-form" action="search.php" method="GET">
-				<input type="text" id="searchbox" name="keyword"><input id="search-btn" type="image" src="images/search_box_icon.png">
-				</form>
 			</div>
 		</div>
 	</div>
