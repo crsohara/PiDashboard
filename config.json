@@ -1,0 +1,7 @@
+{
+	"update-interval"	:	"3",
+	"weather"			:	{
+								"show-weather"				:		"1",
+								"location-code"		:		"/q/zmw:00000.1.02974"
+							}
+}

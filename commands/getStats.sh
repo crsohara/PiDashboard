@@ -6,12 +6,14 @@ HDD1SPACE="$(du -sh /var/www/html/movieHDD)"
 HDD2SPACE="$(du -sh /var/www/html/tvshowHDD)"
 HDD1PERCENT="$(df -h | grep /dev/sdb1 | awk '{ print $5 }')"
 HDD2PERCENT="$(df -h | grep /dev/sda1 | awk '{ print $5 }')"
+DISTRO="$(cat /etc/*-release | grep PRETTY_NAME | awk -F \" '{print $2}')"
 # You must add following two lines before
 # outputting data to the web browser from shell
 # script
  echo "<div class='statssection'>"
 
  echo "Time: $OUTPUT <br>"
+ echo "Distro: $DISTRO <br>"
  echo "Total uptime: $UPTIME <br>"
  echo "Shell Script name is $0"
 

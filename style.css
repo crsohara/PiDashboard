@@ -1,7 +1,6 @@
 body{
 	font-family: "Helvetica Neue", Helvetica;
 	margin:0px;
-	background: url("images/texturetastic_gray.jpg") repeat center center;
 }
 form {
 	margin-bottom: 0;
@@ -51,16 +50,8 @@ a {
 	letter-spacing: -22;
 }
 
-#top{
-	min-width: 600px;
-	margin: auto;
-	background-color: white;
-}
-#content{
-
-}
-
 /*-------------------- BEGIN HEADER -----------------*/
+
 #header{
 	height: 160px;
 	background: url("images/small_jumbotron.jpg") repeat center center;
@@ -69,7 +60,7 @@ a {
 	float: left;
 	margin-left: 14px;
 	margin-top: 0px;
-	width: 50%;/*33%;*/
+	width: 50%;
 }
 #logo-link{
 	color: white;
@@ -117,21 +108,22 @@ a {
 .cont {
 	width: 80%;
 	margin: 0 auto;
-	/*min-width: 600px;*/
 	overflow: hidden;
 }
 .nav {
 	margin: 0;
 	-webkit-padding-start: 0;
 	font-size: 14px;
+	float:left;
 }
 .nav > li {
 	float: left;
+	display: inline-block;
 }
 .nav > li > a, #time {
 	display: block;
 	color: #999999;
-	padding: 10px 15px;
+	padding: 12px 15px 12px;
 }
 .nav > li > a:hover, .nav > li > a:hover .navicon {
 	color: white;
@@ -151,8 +143,9 @@ a {
 #time-icon {
 	background-position: -47px -23px;
 	position: relative;
-	top: 10px;
+	top: 12px;
 }
+
 #stat-icon {
 	background-position: -384px -143px;
 }
@@ -174,7 +167,113 @@ a {
 	margin-top: 11px;
 	opacity: .3;
 }
+
+.nav ul {
+	display:none;
+}
+
+.nav li:hover > ul {
+	display: block;
+	color: white;
+	opacity: 1;
+}
+
+.nav :after {
+	clear: both; 
+	display: block;
+}
+
+
+.nav ul {
+	background: rgb(63,63,63); 
+	border-radius: 0px 0px 3px 3px;
+	border: 1px solid #252525;
+	padding: 10px;
+	position: absolute;
+	list-style:none;
+	z-index: 100;
+}
+.nav ul li {
+	float: none; 
+	position: relative;
+	padding: 5px 0;
+}
+
+#uptime-nav {
+	float:right;
+}
+
+#ui-autocomplete {
+	display: none;
+	color: black;
+	background-color: white;
+	list-style: none;
+	z-index: 101;
+	position: absolute;
+	left: 100px;
+	top: 26px;
+	border: 1px solid rgb(165,165,165);
+	padding: 0;
+	margin: 0;
+	width: 180px;
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	cursor: pointer;
+}
+
+#new-weather-location { 
+	width: 182px;
+	height: 22px;
+	border: 1px solid rgb(107,104,104);
+	border-radius: 3px;
+}
+
+#ui-autocomplete li:not(:first-child) {
+	border-top: 1px solid rgb(224,224,224);
+}
+
+#ui-autocomplete li {
+	padding: 3px 10px;
+	color: grey;
+}
+
+#ui-autocomplete li:hover {
+	background-color: rgb(155, 219, 255);
+	color: black;
+}
+
+
+#save-config-btn {
+	background-image: linear-gradient(to bottom, rgb(16,121,255), rgb(0,90,204));
+	border: 1px solid rgb(101,121,223);
+	border-radius: 3px;
+	padding: 5px 100px;
+	line-height: 27px;
+	font-weight: 700;
+	cursor: pointer;
+}
+
+#save-config-btn:hover {
+	background-image: linear-gradient(to bottom, rgb(0,112,255), rgb(0,85,194));
+}
+
 /*-------------------- END NAV -----------------*/
+/*-------------------- BEGIN MAIN CONTENT -----------------*/
+
+#main-content {
+	background-color:white;
+}
+
+/*-------------------- END MAIN CONTENT ------------*/
+/*-------------------- BEGIN FOOTER ------------*/
+#footer {
+	height:160px;
+	display:block;
+	background-color:#f5f5f5;
+	background: url("images/texturetastic_gray.jpg") repeat center center;
+	border-top: 1px solid #ddd;
+}
+/*-------------------- END FOOTER ------------------*/
 /*-------------------- BEGIN STATS -----------------*/
 .statssection {
 	width: 50%;
@@ -182,15 +281,21 @@ a {
 }
 .statssection1 , .cpubox{
 	position: relative;
-	/*left: 25%;*/
 }
 .piecontainer {
 	float: left;
 	padding: 10px;
 }
+
+#ram-pie-container {
+	position: relative;
+	left: 51px;
+}
+
 .notlast {
 	border-right: 1px solid #D8D8D8;
 }
+
 .pietext {
 	text-align: center;
 	font-size: 12px;
@@ -205,7 +310,6 @@ a {
 .statwrapper { 
 	float:left;
 	position: relative;
-	/*left: 50%;*/
 }
 
 .cpubox, .rambox, .netbox{
@@ -214,10 +318,8 @@ a {
 	margin-bottom: 10px;
 	border: 1px solid #D8D8D8;
 	border-radius: 3px;
-	position: relative;
-}
-
-.cpubox, .netbox, .rambox{
+	position: relative;	
+	max-height: 170px;
 	-webkit-transition-duration: 0.3s;
 	width: 220px;
 	overflow: hidden;
@@ -255,6 +357,10 @@ a {
 	-webkit-transition-duration: 0.3s;
 }
 
+#show-ram-hist {
+	left: 100px;
+}
+
 .showhide {
 	width: 19px;
 	float: left;
@@ -272,10 +378,37 @@ a {
 	padding: 1px;
 	border: 1px solid #D8D8D8;
 	border-radius: 9px;	
-	margin-left: 10px;
+	left: 10px;
 }
 
 
+.details {
+	width:200px;
+	text-align: center;
+	position: relative;
+	top: 10px;
+}
+
+.detail {
+	display: inline-block;
+}
+
+.detail-current {
+}
+
+.detail-min-max, .detail-governor, .detail-ramtotal, .detail-speedtxt {
+	position: relative;
+	top: 7px;
+}
+
+.detail-speedtxt {
+	display: block;
+}
+
+.detail-governor {
+	position: relative;
+	top: 14px;
+}
 
 /*-------------------- END STATS -----------------*/
 /*-------------------- START WEATHER -----------------*/
