@@ -1,19 +1,12 @@
 #!/bin/bash
-up=$(uptime)
 
-if [[ "$up" == *min*  ]]
-then
-	#uptime=$(uptime | awk -F " " '{print $3 " " $4 " " $5}')
-	up=$(echo $up | awk -F " " '{print $3 " " $4 " " $5 " " $6}')
-elif [[ "$up" == *day* ]]
-then
-	#uptime=$(uptime | awk -F " " '{print $3 " " $4 " " $5 " " $6}')
-	up=$(echo $up | awk -F " " '{print $3 " " $4 " " $5}')
-else
-	#uptime=$(uptime | awk -F " " '{print £3 " " $4}')
-	up=$(echo $up | awk -F " " '{print $3 " " $4}')
-fi
+uptime=$(awk '{print $1}' /proc/uptime)
+uptime=${uptime%%.*}
 
-echo ${up%?}
+seconds=$(( $uptime%60 ))
+minutes=$(( $uptime%3600/60 ))
+hours=$(( $uptime/3600%24 ))
+days=$(( $uptime/3600/24 ))
 
-
+#echo $days days\, `printf "%02d" $hours`:`printf "%02d" $minutes`
+echo {\"uptime\":{\"days\":\"$days\"\, \"hours\":\"$hours\"\, \"minutes\":\"$minutes\"\, \"seconds\":\"$seconds\"}}

@@ -1,232 +1,168 @@
 /*jslint browser: true*/
 /*global  google,$,jQuery,console*/
-$(document).ready(function () {
-	// ============================= Initial set up =============================
-	
+$(function () {
 	"use strict";
-	
-	// weather related variables.
-	var weatherApiUrl = 'http://api.wunderground.com/api/3ac2dad33e6ae0c6/conditions',
-	weatherDataType = '.json',
-	
-	// time
-	currentTimeString,
-	
-	// data update interval
-	updateInterval,
+
+	var flag = 0,
+		kb = 1024,
+		mb = Math.pow(1024, 2),
+		tenMb = mb*10,
+		gb = Math.pow(1024, 3);
+		
+	$('.menu-btn').click(function() {
+		//$('.dropdownmenu').toggleClass('hideElement');
+	});
+
+	function toggleNightBtnText() {
+		if($('.night-mode-btn').text() === 'Night Mode') {
+			$('.night-mode-btn').text('Day Mode');
+			$('.night-mode-btn').attr('title', '...Fighter of the Nightmode(ah-ah-ah)');
+		}
+		else {
+			$('.night-mode-btn').text('Night Mode');
+			$('.night-mode-btn').attr('title', '');
+		}
+	}
+
+	$('.night-mode-btn').click(function() {
+		$('body').toggleClass('night-mode');
+		$('.dropdownmenu').toggleClass('night-mode');
+		toggleNightBtnText();
+	});
+
+
+	$('.show-details-btn').click(function() {
+		if(flag % 2 === 0){
+			$('.barBackground').removeClass('animin');
+			$('.barBackground').addClass('anim');
+			$('.details').addClass('test');
+		}
+		else {
+			$('.barBackground').removeClass('anim');
+			$('.barBackground').addClass('animin');
+			$('.details').removeClass('test');
+		}
+		flag++;
+	});
+
+	function updateProgressCpu(cpuUse, temp) {
+		$('.cpuStatusBars .barFill').eq(0).css('width', cpuUse + '%');
+		$('.cpuStatusBars .barText').eq(0).html(~~cpuUse);
+
+		$('.cpuStatusBars .barFill').eq(1).css('width', temp + '%');
+		$('.cpuStatusBars .barText').eq(1).html(~~temp);
+	}
+
+	function updateProgressRam(numText) {
+		$('.ramStatusBars .barFill').eq(0).css('width', numText + '%');
+		$('.ramStatusBars .barText').eq(0).html(~~numText);
+	}
+
+	function updateProgressNet(upSpeed, downSpeed) {
+		var percent,
+		units='';
+
+		if(upSpeed < kb) {
+			units = 'B/s';
+			percent = (upSpeed/kb) * 100;
+		}
+		else if(upSpeed < mb && upSpeed > 0) {
+			units = 'KB/s';
+			percent = (upSpeed/mb) * 100;
+			upSpeed = (upSpeed/kb).toFixed(1);
+		}
+		else if(upSpeed < gb && upSpeed > 0) {
+			units = 'MB/s';
+			percent = (upSpeed/tenMb) * 100;
+			upSpeed = (upSpeed/mb).toFixed(1);
+		}
+		$('.netStatusBars .barText').eq(0).text(upSpeed);
+		$('.netSpeedUpUnits').text(units);
+		$('.netStatusBars .barFill').eq(0).css('width', ~~percent + '%');
+		
+
+		if(downSpeed < kb) {
+			units = 'B/s';
+			percent = (downSpeed/kb) * 100;
+		}
+		else if(downSpeed < mb && downSpeed > 0) {
+			units = 'KB/s';
+			percent = (downSpeed/mb) * 100;
+			downSpeed = (downSpeed/kb).toFixed(1);
+		}
+		else if(downSpeed < gb && downSpeed > 0) {
+			units = 'MB/s';
+			percent = (downSpeed/tenMb) * 100;
+			downSpeed = (downSpeed/mb).toFixed(1);
+		}
+		$('.netStatusBars .barText').eq(1).text(downSpeed);
+		$('.netSpeedDownUnits').text(units);
+		$('.netStatusBars .barFill').eq(1).css('width', ~~percent + '%');		
+	}
+
+	function updateCpuRamNetData(json) {
+		$('#currentMhz').text(json.cpu.current_frequency);
+		$('#usedRam').text(json.ram.used);
+		$('#freeRam').text(json.ram.free);
+		$('#totalRam').text(~~(json.ram.total/1024));
+	}
+
+
+	// ============================= Initial set up =============================	
+
+	var updateInterval,
 	dataUpdateLoop,
 	
 	// hold config file 
-	config = [],
-	
-	//  History chart variables
-	cpuTitles = ["", "% / \u00B0c", ""],
-	netTitles = ["Net Speed", "kbp/s", ""],
-	ramTitles = ["","Mb",""],
-
-	cpuChart = new google.visualization.AreaChart(document.getElementById('cpu-vis')),
-	ramChart = new google.visualization.AreaChart(document.getElementById('ram-vis')),
-	netChart = new google.visualization.AreaChart(document.getElementById('net-vis')),
-
-	chartSize = [500, 200],
-	colours = ["green","#E30B5C","orange","blue", "red"],
-	newcpudata = ['',0,0],
-	newnetdata = ['',0,0],
-	newramdata = ['',0],
-
-	cpuarray = [ ['Time', 'CPU', 'Temp'], ['', 0, 0] ],
-	ramarray = [ ['', 'Used'], ['', 1] ],
-	netarray = [ ['Time', 'Up', 'Down'], ['', 0, 0] ],
-	updateHistoryLength = 20,
-	boxWidth = 220;
-	
-	
-	// initial set up of pie charts
-	$(function () {
-		$('.chart').easyPieChart({
-			 barColor: function(percent) {
-				percent /= 100;
-				return "rgb(" + Math.round(255 * percent) + ", " + Math.round(255 * (1-percent)) + ", 0)";
-			},
-			lineWidth: 10,
-			size: 80,
-			animate: 1000,
-			scaleColor: false,
-			trackColor: '#E0E4CC',
-			lineCap: 'square',
-			onStep: function(value) {
-				this.$el.find('span').text(~~value); // ~~ = bitwise Math.floor
-			}
-		});
-	});
+	config = [];
 	
 	// update the config object
 	function updateConfig(key, value) {
 		config[key] = value;
 	}
 	
-	
-	// =============== History charts ===============================================================================
-		
-	function drawCpuHistoryChart() {
-		var data = google.visualization.arrayToDataTable(cpuarray);
-	  
-		// Craw the cpu history chart.
-		cpuChart.draw(data, {
-		  isStacked: false,
-		  width: chartSize[0],
-		  height: chartSize[1],
-		  vAxis: {
-			title: cpuTitles[1],
-			viewWindowMode: 'explicit',
-			viewWindow: {
-					max:120,
-					min:1
-				  }},
-		  hAxis: { title: cpuTitles[2] },
-		  colors: [ colours[0], colours[1] ]
-		});
-	}
-	
-	function drawRamHistoryChart() {
-		var data = google.visualization.arrayToDataTable(ramarray);
-	  
-		// Draw the ram history chart.
-		ramChart.draw(data, {
-		  title : ramTitles[0],
-		  isStacked: false,
-		  width: chartSize[0],
-		  height: chartSize[1],
-		  vAxis: {title: ramTitles[1],
-		  viewWindowMode: 'explicit',
-			viewWindow: {
-					max:512,
-					min:1
-				  }},
-		  hAxis: {title: ramTitles[2]},
-		  colors: [colours[4]]
-		});
-	}
-
-	function drawNetHistoryChart() {
-		var data = google.visualization.arrayToDataTable(netarray);
-	  
-		// Draw the network history chart.
-		netChart.draw(data, {
-		  title : netTitles[0],
-		  isStacked: false,
-		  width: chartSize[0],
-		  height: chartSize[1],
-		  vAxis: {title: netTitles[1]},
-		  hAxis: {title: netTitles[2]},
-		  colors: [colours[2], colours[3]]
-		});
-	}
-
-	
 	// ==================== get/show cpu/ram/net data =======================================
+	function getStaticData() {
+		$.ajax({
+			url: 'getData.php?getCpuDetails',
+			type: 'get',
+			dataType: 'json',
+			async: true,
+			success: function(json) {
+
+				$('#maxMhz').text(json.cpu.freq.max_frequency);
+				$('#minMhz').text(json.cpu.freq.min_frequency);
+				$('#currentMhz').text(json.cpu.freq.current_frequency);
+				$('#currentGovernor').text(json.cpu.governor);
+				$('#localAddress').text(json.net.ipv4_lan);
+				$('#wanAddress').text(json.net.ipv4_wan);
+				$('#hostname').text(json.net.hostname);
+			}
+		});
+	}
 
 	// cpu/ram/net ajax call
 	function getUpdateData() {
-		var vars;
 		if(!$('#Chckbox').is(":checked")) {
 			$.ajax({
-				url: 'getData.php?getCpuRamNetData',//'getcpu.php',
+				url: 'getData.php?getCpuRamNetData',
 				type: 'get',
-				dataType: 'html',
+				dataType: 'json',
 				async: true,
-				success: function(data) {
-					vars = data.split(':');
-					$("#cpuid").data('easyPieChart').update(vars[0]);
-					$("#cputemp").data('easyPieChart').update(vars[1]);
-					$("#freemem").data('easyPieChart').update(vars[2]);
-					$("#upspeed").data('easyPieChart').update(vars[3]);
-					$("#downspeed").data('easyPieChart').update(vars[4]);
-					$("#cur-cpu-freq").text(vars[5]);
-					$("#ramused").text(vars[6]);
-					$("#ramfree").text(vars[7]);
-					$("#upspeedtxt").text(vars[3]);
-					$("#downspeedtxt").text(vars[4]);
-					
-					
-					// keep the cpu data for the past 20 updates
-					// but only print to graph when it is visible
-					newcpudata[0] = currentTimeString;
-					newcpudata[1] = Math.round(vars[0]);
-					newcpudata[2] = Math.round(vars[1]);
-
-					if(cpuarray.length === updateHistoryLength) {
-						cpuarray.splice(1, 1);
-					}
-
-					cpuarray.push(newcpudata.slice(0));
-					drawCpuHistoryChart();
-					
-					newramdata[0] = currentTimeString;
-					newramdata[1] = Math.round(vars[2]);
-					
-					if(ramarray.length === updateHistoryLength) {
-						ramarray.splice(1,1);
-					}
-					
-					ramarray.push(newramdata.slice(0));
-					drawRamHistoryChart();
-
-					newnetdata[0] = currentTimeString;
-					newnetdata[1] = Math.round(vars[3]);
-					newnetdata[2] = Math.round(vars[4]);
-					
-					if(netarray.length === updateHistoryLength) {
-						netarray.splice(1, 1);
-					}
-
-					netarray.push(newnetdata.slice(0));
-					drawNetHistoryChart();
+				success: function(json) {
+					updateCpuRamNetData(json);
+					updateProgressCpu(json.cpu.percent_used, json.cpu.temperature);
+					updateProgressRam((json.ram.used/(json.ram.total/1024))*100);
+					updateProgressNet(json.net.upload, json.net.download);
 				} 
 			});
 		}
 	}
-	
-	// ================ show/hide history charts ==============================================================================
-	
-	// show history charts when expand arrows are clicked
-	$('#show-cpu-hist').add('#show-ram-hist').add('#show-net-hist').click(function() {
-		if($(this).parent().width() < 300) {
-			$(this).parent().width(boxWidth + 500 + 'px');
-			$(this).children(":first").css({backgroundPosition: '-430px -72px'});
-			drawCpuHistoryChart();	
-			drawRamHistoryChart();
-			drawNetHistoryChart();
-		}
-		else {
-			$(this).parent().width(boxWidth + 'px');
-			$(this).children(":first").css({backgroundPosition: '-454px -72px'});
-		}
-	});
-	
 
 	// =================== get more stats from server (stats button) ========================================
-	
-	// print stats to page
-	function printstats(data){
-		$("#status").attr("style", "display:block;").html(data);
-		
-		$(function() {
-			$('.chart').easyPieChart({
-				barColor: function(percent) {
-					percent /= 100;
-					return "rgb(" + Math.round(255 * (1-percent)) + ", " + Math.round(255 * percent) + ", 0)";
-				},
-				trackColor: false,
-				animate: 1000,
-				scaleColor: false,
-				lineCap: 'square'
-			});
-		});
-	}
-	
+
 	// get stats async ajax call
-	function getStatsFromServer() {
+	/*function getStatsFromServer() {
 
 		$.ajax({
 			url: 'getData.php?getStuff',//'stats.php',
@@ -237,246 +173,54 @@ $(document).ready(function () {
 				printstats(data);
 			}
 		 });
-	}
-	
-	// add listener to stats button
-	// if stats are already displayed hide them, otherwise get stats from server and display.
-	$(function () {
-		$('#show-status-btn').click(function () {
-			if ($("#status").attr("style") === "display:block;") {
-				$("#status").attr("style", "display:none;");
-			}
-			else {
-				getStatsFromServer();
-			}
-		});
-	});
-	
-	
-	// ==================== weather =======================================
-	
-	// display the new weather data and icon
-	function updateWeatherContent(weather_data) {
-		$('#imgweather').attr('src', 'images/tick_weather_icons/' + weather_data.current_observation.icon + '.png');
-		$('#weatherlabel').text(weather_data.current_observation.temp_c + "\u00B0c " + weather_data.current_observation.weather);
-		$('#weatherloc').text(weather_data.current_observation.display_location.full);
-		$('#weatherupdatetime').text(currentTimeString);
-	}
-	
-	// query wunderground api for weather data
-	function getWeatherData(location) {
-		var url = weatherApiUrl + location + weatherDataType;
-		$.ajax({
-			url: url,
-			dataType: 'jsonp',
-			success: function(parsed_json) {
-				updateWeatherContent(parsed_json);
-			}
-		});
-	}
-	
-	// used to display weather and check show weather checkbox based on show-weather flag in conf file. used on page load.
-	function showWeatherOnLoad(){
-		if( config.weather['show-weather'] === '1' || $('#show-weather-check').is(':checked') ) {
-			$(".weather").attr("style", "display:block;");
-			$('#show-weather-check').prop("checked", true);
-			console.log(config.weather['show-weather']);
-			return true;
-		}
-		return false;
-	}
-	
-	// show/hide weather area
-	function toggleWeatherOnOff(toggle) {
+	}*/
 
-		if( toggle.is(':checked') ){
-			$(".weather").attr("style", "display:block;");
-			getWeatherData( config.weather['location-code'] );
-			config.weather['show-weather'] = '1';
-		}
-		else {
-			$(".weather").attr("style", "display:none;");
-			config.weather['show-weather'] = '0';
-		}
-	}
-	
-	// show weather toggle + change config to new value
-	$('#show-weather-check').click(function (){
-		toggleWeatherOnOff( $(this) );
-	});
-	
-	// weather autocomplete location search
-	$('#new-weather-location').keyup(function () {
-
-		$.ajax({
-		
-			url: 'http:// autocomplete.wunderground.com/aq?query=' + $(this).val() + '&format=JSON',
-			dataType: 'jsonp',
-			jsonp:    "cb",
-			success: function (data) {
-				$('#auto-one').text(data.RESULTS[0].name);
-				$('#auto-two').text(data.RESULTS[1].name);
-				$('#auto-three').text(data.RESULTS[2].name);
-				$( ".ui-menu-one" ).data( "url", data.RESULTS[0].l );
-			}
-		});
-		
-		if ($('#new-weather-location').val() === "") {
-			$('#ui-autocomplete').css({display: 'none'});
-		}
-		else {
-			$('#ui-autocomplete').css({display: 'block'});
-		}
-	});
-	
-	// on selecting a location, update weather for that location
-	$('.ui-menu-one').click(function () {
-	
-		getWeatherData( $(this).data("url") );
-		// updateConfig( "['weather']['show-weather']", $(this).data("url") );
-		config.weather['show-weather'] = $(this).data("url");
-		$('#new-weather-location').val("");
-		$(this).parent().css({display: 'none'});
-		
-	});
-
-	
 	// ======================= update interval =======================================
 
 	// show currently configured interval saved in config file
-	function displaySavedInterval() {
+	/*function displaySavedInterval() {
 		var interval = config['update-interval'];
 		$('#update-interval').find('option[value="' + interval + '"]').attr("selected",true);
-	}
+	}*/
 	
 	// update config object interval time in case it is to be saved
 	$('#update-interval').change(function() {
-		
 		updateConfig('update-interval', $(this).val());
-		// config['update-interval'] = $(this).val();
-
 		clearInterval(dataUpdateLoop);
-		
 		updateInterval = (config['update-interval']*1000);
-		
 		dataUpdateLoop = setInterval(getUpdateData, updateInterval);
-		
 	});
 	
-	
-	// ==================== current time & uptime =======================================
+	// ==================== current time & uptime ======================================
 
-	// format minutes and second single digit values to two digits e.g. format 1 to 01, 2 to 02
-	function checkDigit(i) {
-		if(i < 10) {
-			return "0" + i;
-		}
-		return i;
-	}
-	
-	// calculate the current time
-	function calculateCurrentTime() {
-		var today, h, m, s;
-		today = new Date();
-		h = today.getHours();
-		m = checkDigit(today.getMinutes());
-		s = checkDigit(today.getSeconds());
-
-		return {
-			hour: h,
-			minute: m,
-			second: s
-		};
-	}
-	
-	// print time and set currentTimeString
-	function showtime() {
-		var time = calculateCurrentTime();
-		$('#time').html(time.hour + ":" + time.minute + ":" + time.second);
-		currentTimeString = time.hour + ":" + time.minute + ":" + time.second;
-	}
-	
-	// update and print the current time every second
-	setInterval(showtime, 1000 );
-	
 	// get and print system uptime
-	function getuptime() {
+	/*function getuptime() {
 		$.ajax({
-			url: 'getData.php?getUptime',//'getuptime.php',
+			url: 'getData.php?getUptime',
 			type: 'get',
-			dataType: 'html',
-			async: true,
-			success: function(data) {
-				$('#uptime').html(data);
-			} 
-		});
-	}
-	
-	// get system uptime every 30 seconds
-	setInterval(getuptime, 30000 );
-	
-
-	// ================== configuration ===================================
-	
-	// send current config back to system and save to file
-	function saveConfiguration() {
-		console.log("Saving configuration...");
-		
-		$.ajax({
-			url: 'writeConfigFile.php',
 			dataType: 'json',
-			type: 'POST',
 			async: true,
-			data: ({
-				configuration: config
-			}),
-			success: function(response){
-				if(response.status === '1') {
-					console.log(response.desc);
-				}
+			timeout: 10000,
+			success: function(json) {
+				// show uptime
 			},
-			error: function(xhr){
-				console.log('Error: ' + JSON.parse(xhr.responseText).desc );
-			}
+			error: function(x, t, m) {
+		        if(t==="timeout") {
+		            console.log("got timeout");
+		        } else {
+		            console.log(x + ' ' + t + ' ' + m);
+		        }
+		    }
 		});
 	}
-	
-	// save config to system
-	$('#save-config-btn').click(function() { 
-		saveConfiguration(); 
-	});
-	
-	// load config to javascript object
-	function getconf(){
-		var url = 'config.json';
-		$.ajax({
-			type: 'GET',
-			url: url,
-			dataType: 'json',
-			success: function(data) { config = data;},
-			async: false
-		});
-		
-		updateInterval = (config['update-interval'] * 1000);
-		console.log(updateInterval);
-		if (showWeatherOnLoad()) {
-			showtime();
-			getWeatherData( config.weather['location-code'] );
-			console.log(currentTimeString);
-		}
-		displaySavedInterval();	
-	}
+	// get system uptime every 30 seconds
+	setInterval(getuptime, 30000 );*/
 
 	function begin() {
-		showtime();
-		getconf();
-		getuptime();
+		//getuptime();
+		getStaticData();
 		getUpdateData();
-		dataUpdateLoop = setInterval(getUpdateData, updateInterval );
+		dataUpdateLoop = setInterval(getUpdateData, 3000);
 	}
 	begin();
-
-
-
-
 });

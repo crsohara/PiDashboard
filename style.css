@@ -1,494 +1,427 @@
-body{
+* {
+	-moz-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+	-o-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box; 
+}
+
+html {
 	font-family: "Helvetica Neue", Helvetica;
-	margin:0px;
-}
-form {
-	margin-bottom: 0;
-}
-a {
-	text-decoration: none;
-}
-.buttonwrapper {
-	float: left;
-	width: 0px;
-}
-.button{
-	display: block;
-	font-size: 14px;
-	width: 130px;
-	height: 20px;
-	background: #1B1B1B;
-	padding: 5px;
-	text-align: center;
-	color: #999999;
-	text-decoration: none;
-	border: 1px solid #969696;
-	margin-top: -1px;
-}
-.button:hover{
-	border-color:red;
-	color: white;
-	text-decoration: none;
-	z-index:10;
+	
 }
 
-#status{
-	display: none;
+body{
+	position: absolute;
+	top: 40px;
+	margin: 0px;
+	width: 100%;
+	color: rgb(100, 100, 100);
+	background-color: #fff;
+}
+
+/* ======= general usefullness ======= */
+.hideElement {
+	position: absolute;
 	overflow: hidden;
-	clear: both;
-}
-.pilogo {
-	position: relative;
-	text-shadow: 3px 0 3px rgba(0,0,0,0.1),2px 0 2px rgba(0,0,0,0.1),1px 0 1px rgba(0,0,0,0.1);
-	font-size: 80px;
-}
-#pi-span{
-	color: #E30B5C;
-	letter-spacing: -18;
-}
-#pi-spa {
-	letter-spacing: -22;
+	clip: rect(0 0 0 0);
+	height: 1px; 
+	width: 1px; 
+	margin: -1px; 
+	padding: 0; 
+	border: 0; 
 }
 
-/*-------------------- BEGIN HEADER -----------------*/
+nav:hover .hideElement, nav:active .hideElement {
+	width: auto;
+	height: auto;
+	clip: auto;
+	overflow: visible;
+}
 
-#header{
-	height: 160px;
-	background: url("images/small_jumbotron.jpg") repeat center center;
+/* ======= header ======= */
+.page-header {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	z-index: 20;
 }
-#logo-area{
-	float: left;
-	margin-left: 14px;
-	margin-top: 0px;
-	width: 50%;
-}
-#logo-link{
-	color: white;
+
+/* ======= Logo ======= */
+.logo{
+	text-align: center;
 	text-decoration: none;
+	font-size: 2em;
+	letter-spacing: -2;
+	font-weight: 200;
+	background-color: white;
 }
-#search-btn{
-	background-color: 555555;
-	padding: 5px 10px;
-	position: relative;
-	top: 7px;
+
+body.night-mode .logo {
+	background-color: #222;
 }
-#search-area{
-	width: 33%;
-	float: right;
+
+.logoBrace {
 	position: relative;
-	top: -65px;
-	margin-right: 10px;
+	top: -3px;
+}
+
+.pi-span{
+	color: #E30B5C;
+}
+
+/* ======= menu ======= */
+.menu-btn {
+	position: absolute;
+	top: 4;
+	right: 10;
+	cursor: pointer;
+	color: #e30b5c;
+}
+
+.dropdownmenu {
+	position: absolute;
+	right: 10px;
+	border: 2px solid #E30B5C;
+	border-radius: 3px;
+	background-color: white;
+}
+body.night-mode .dropdownmenu {
+	background-color: #222;
+}
+
+.ul-menu {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+.ul-menu::before {
+	content: "";
+	border: 10px solid transparent;
+	border-bottom-color: #E30B5C;
+	position: absolute;
+	top: -20px;
+	right: 1px;
+}
+.ul-menu::after {
+	content: "";
+	border: 10px solid transparent;
+	border-bottom-color: white;
+	position: absolute;
+	top: -17;
+	right: 1px;
+}
+body.night-mode .ul-menu::after {
+	border-bottom-color: #222;
+}
+.ul-menu li {
+	padding: 15px 10px;
+	cursor: pointer;
+}
+
+.ul-menu li:not(:first-child) {
+	border-top: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+/* ======= Status Bars ======= */
+section.statusBarsContainer {
+	display: table;
+	margin: 0 auto;
+	white-space: nowrap;
+}
+@media screen and (min-width: 1024px) {
+	section.statusBarsContainer {
+	}
+}
+
+.statusBarsLabel {
+	width: 102px;
 	text-align: right;
 }
-#searchbox{
-	height: 23px;
+@media screen and (min-width: 640px) {
+	.statusBarsLabel {
+		width: 164px;
+	}
 }
-.ribbon {
-	height: 15px;
-	background-color: #f5f5f5;
-	border-bottom: 1px solid #ddd;
-}
-/*-------------------- END HEADER -----------------*/
-#uptime {
-	text-align: center;
-	color: #999999;
-	padding: 10px 15px;
-	float:right;
+@media screen and (min-width: 1024px) {
+	.statusBarsLabel {
+		width: 233px;
+	}
 }
 
-/*-------------------- START NAV -----------------*/
-.navbar-inner{
-	background-image: linear-gradient(to bottom, #222222, #111111);
-	-webkit-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-	-moz-box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-	box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
-	border: 1px solid #252525;
-	min-height:40px;
+.contentNameLabel {
+	-webkit-transition: all 800ms ease;
+	font-size: 2em;
+	position: relative;
+	top: -11px;
+	left: 5px;
 }
-.cont {
-	width: 80%;
-	margin: 0 auto;
+@media screen and (min-width: 640px) {
+	.contentNameLabel {
+		font-size: 3.5em;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.contentNameLabel {
+		font-size: 5em;
+	}
+}
+
+.contentNameLbrace, .contentNameRbrace, .contentRparentheses, .contentLparentheses {
+	font-size: 4.8em;
+	-webkit-transition: all 800ms ease;
+}
+@media screen and (min-width: 640px) {
+	.contentNameLbrace, .contentNameRbrace, .contentRparentheses, .contentLparentheses {
+		font-size: 6.8em;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.contentNameLbrace, .contentNameRbrace, .contentRparentheses, .contentLparentheses {
+		font-size: 9.8em;
+	}
+}
+
+.statusBars {
+	position: relative;
+	left: -3px;
+}
+@media screen and (min-width: 640px) {
+	.statusBars {
+		left: -16px;
+	}
+}
+
+.barContainer {
+	display: block;
+	margin-top: 6px;
+	position: relative;
+	left: -6px;
+}
+@media screen and (min-width: 640px) {
+	.barContainer {
+		left: 0;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.barContainer {
+		margin-top: 20px;
+		margin-bottom: 20px;
+		left: -12px;
+	}
+}
+
+.barText{
+	text-align: right;
+	width: 31px;
+}
+@media screen and (min-width: 640px) {
+	.barText {
+		width: 46px;
+	}
+}
+@media screen andn (min-width: 1024px) {
+	.barText {
+		width: initial;
+	}
+}
+
+.barText, .postfixSymbol {
+	font-size: 1em
+}
+@media screen and (min-width: 640px) {
+	.barText, .postfixSymbol {
+		font-size: 1.5em
+	}
+}
+@media screen and (min-width: 1024px) {
+	.barText, .postfixSymbol {
+		font-size: 2em
+	}
+}
+
+.postfixSymbol {
+	width: 39px;
+}
+@media screen and (min-width: 1024px) {
+	.postfixSymbol {
+		width: 32px;
+	}
+}
+
+.netSpeedUpUnits, .netSpeedDownUnits {
+	width: 39px;
+}
+
+.netStatusBars .postfixSymbol {
+	font-size: 1em;
+}
+
+.barBackground {
+	-webkit-transition: width 1s ease, opacity 1s ease;
+	width: 100px;
+	height: 13px;
+	border: 1px solid rgb(177, 175, 175);
+	background-color: rgb(238, 238, 238);
+	border-radius: 2px;
+}
+@media screen and (min-width: 1024px) {
+	.barBackground {
+		width: 300px;
+		height: 24px;
+	}
+}
+
+.barFill{
+	height: 11px;
+	width: 0;
+	background-color: rgb(46, 228, 12);
 	overflow: hidden;
+	-webkit-transition: width 500ms cubic-bezier(0.000, 0.585, 0.545, 0.960);
 }
-.nav {
-	margin: 0;
-	-webkit-padding-start: 0;
-	font-size: 14px;
-	float:left;
-}
-.nav > li {
-	float: left;
-	display: inline-block;
-}
-.nav > li > a, #time {
-	display: block;
-	color: #999999;
-	padding: 12px 15px 12px;
-}
-.nav > li > a:hover, .nav > li > a:hover .navicon {
-	color: white;
-	opacity: 1;
+@media screen and (min-width: 1024px) {
+	.barFill{
+		height: 22px;
+	}
 }
 
-.navicon {
-	background-image: url("bootstrap/img/glyphicons-halflings-white.png");
-	width: 14px;
-	height: 14px;
-	float: left;
-	margin-left:-1px;
-	padding-right:1px;
-	opacity: .3;
-}
-
-#time-icon {
-	background-position: -47px -23px;
+.ramBars {
 	position: relative;
-	top: 12px;
+	top: -14px;
+}
+@media screen and (min-width: 1024px) {
+	.ramBars {
+		position: relative;
+		top: -30px;
+	}
 }
 
-#stat-icon {
-	background-position: -384px -143px;
-}
-#setting-icon {
-	background-position: -434px 1px;
-}
-#logout-icon {
-	background-position: -384px 1px;
-}
-
-
-
-#uptime-icon {
-	background-image: url("bootstrap/img/glyphicons-halflings-white.png");
-	background-position: -47px -23px;
-	width: 14px;
-	height: 14px;
-	float: right;
-	margin-top: 11px;
-	opacity: .3;
-}
-
-.nav ul {
-	display:none;
-}
-
-.nav li:hover > ul {
-	display: block;
-	color: white;
-	opacity: 1;
-}
-
-.nav :after {
-	clear: both; 
-	display: block;
-}
-
-
-.nav ul {
-	background: rgb(63,63,63); 
-	border-radius: 0px 0px 3px 3px;
-	border: 1px solid #252525;
-	padding: 10px;
-	position: absolute;
-	list-style:none;
-	z-index: 100;
-}
-.nav ul li {
-	float: none; 
+.parentheses, .contentNameRbrace {
 	position: relative;
-	padding: 5px 0;
+	left: -6px;
 }
-
-#uptime-nav {
-	float:right;
+@media screen and (min-width: 640px) {
+	.parentheses, .contentNameRbrace {
+		position: initial;
+	}
 }
-
-#ui-autocomplete {
-	display: none;
-	color: black;
-	background-color: white;
-	list-style: none;
-	z-index: 101;
-	position: absolute;
-	left: 100px;
-	top: 26px;
-	border: 1px solid rgb(165,165,165);
-	padding: 0;
-	margin: 0;
-	width: 180px;
-	border-bottom-left-radius: 3px;
-	border-bottom-right-radius: 3px;
-	cursor: pointer;
+@media screen and (min-width: 1024px) {
+	.parentheses, .contentNameRbrace {
+		position: initial;
+	}
 }
-
-#new-weather-location { 
-	width: 182px;
-	height: 22px;
-	border: 1px solid rgb(107,104,104);
-	border-radius: 3px;
-}
-
-#ui-autocomplete li:not(:first-child) {
-	border-top: 1px solid rgb(224,224,224);
-}
-
-#ui-autocomplete li {
-	padding: 3px 10px;
-	color: grey;
-}
-
-#ui-autocomplete li:hover {
-	background-color: rgb(155, 219, 255);
-	color: black;
-}
-
-
-#save-config-btn {
-	background-image: linear-gradient(to bottom, rgb(16,121,255), rgb(0,90,204));
-	border: 1px solid rgb(101,121,223);
-	border-radius: 3px;
-	padding: 5px 100px;
-	line-height: 27px;
-	font-weight: 700;
-	cursor: pointer;
-}
-
-#save-config-btn:hover {
-	background-image: linear-gradient(to bottom, rgb(0,112,255), rgb(0,85,194));
-}
-
-/*-------------------- END NAV -----------------*/
-/*-------------------- BEGIN MAIN CONTENT -----------------*/
-
-#main-content {
-	background-color:white;
-}
-
-/*-------------------- END MAIN CONTENT ------------*/
-/*-------------------- BEGIN FOOTER ------------*/
-#footer {
-	height:160px;
-	display:block;
-	background-color:#f5f5f5;
-	background: url("images/texturetastic_gray.jpg") repeat center center;
-	border-top: 1px solid #ddd;
-}
-/*-------------------- END FOOTER ------------------*/
-/*-------------------- BEGIN STATS -----------------*/
-.statssection {
-	width: 50%;
-	margin: 0 auto;
-}
-.statssection1 , .cpubox{
-	position: relative;
-}
-.piecontainer {
-	float: left;
-	padding: 10px;
-}
-
-#ram-pie-container {
-	position: relative;
-	left: 51px;
-}
-
-.notlast {
-	border-right: 1px solid #D8D8D8;
-}
-
-.pietext {
-	text-align: center;
-	font-size: 12px;
-	margin-top: 7px;
-	border-top: 1px solid #D8D8D8;
-}
-.easyPieChart {
-	margin: 0 auto;
-	font-weight: 900;
-}
-
-.statwrapper { 
-	float:left;
-	position: relative;
-}
-
-.cpubox, .rambox, .netbox{
-	float: left;
-	padding: 0 20px 40px 20px;
-	margin-bottom: 10px;
-	border: 1px solid #D8D8D8;
-	border-radius: 3px;
-	position: relative;	
-	max-height: 170px;
-	-webkit-transition-duration: 0.3s;
-	width: 220px;
-	overflow: hidden;
-}
-
-.cpubox:after {
-	content: "CPU";
-}
-
-.rambox:after {
-	content: "RAM";
-}
-
-.netbox:after {
-	content: "NET";
-}
-
-.cpubox:after, .rambox:after, .netbox:after{
-	position: absolute;
-	top: -1;
-	left: -1;
-	border: 1px solid #D8D8D8;
-	border-radius: 3px;
-	padding: 2px;
-	background-color: #F5F5F5;
-	color: #919191;
-}
-
-
-.area-chart {
-	float:left;
-	display:block;
-	position: absolute;
-	left: 250;
-	-webkit-transition-duration: 0.3s;
-}
-
-#show-ram-hist {
-	left: 100px;
-}
-
-.showhide {
-	width: 19px;
-	float: left;
-	display: block;
-	position: relative;
-	top: 52px;
-}
-
-.showhideicon{
-	background-image: url("bootstrap/img/glyphicons-halflings.png");
-	background-position: -454px -72px;
-	width: 15px;
-	height: 14px;
-	display: block;
-	padding: 1px;
-	border: 1px solid #D8D8D8;
-	border-radius: 9px;	
-	left: 10px;
-}
-
 
 .details {
-	width:200px;
-	text-align: center;
+	display: inline-block;
+	overflow: hidden;
 	position: relative;
-	top: 10px;
+	top: 18px;
+	width: 0;
+	-webkit-transition: width 1s ease;
+}
+@media screen and (min-width: 640px) {
+	.cpudetails {
+		display: inline-block;
+		top: 27px;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.cpudetails {
+		top: 21px;
+	}
 }
 
-.detail {
+.ramdetails, .netdetails {
+	top: 9px;
+}
+@media screen and (min-width: 640px) {
+	.ramdetails, .netdetails {
+		top: 12px;
+		position: relative;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.ramdetails, .netdetails {
+		top: 12px;
+		position: relative;
+	}
+}
+
+.cpudetails.test {
+	width: 151px;
+}
+.ramdetails.test {
+	width: 96px;
+}
+.netdetails.test {
+	width: 173px;
+}
+@media screen and (min-width: 1024px) {
+	.cpudetails.test {
+		width: 200px;
+	}
+	.ramdetails.test {
+		width: 127px;
+	}
+	.netdetails.test{
+		width: 235px;
+	}
+}
+
+.detailsFreq {
+	font-size: 1em;
+	line-height: 1.2em;
+	display: block;
+	text-shadow: none;
+}
+@media screen and (min-width: 640px) {
+	.detailsFreq {
+		font-size: 0.9em;
+		line-height: 1.9em;
+	}
+}
+@media screen and (min-width: 1024px) {
+	.detailsFreq {
+		font-size: 1.3em;
+		line-height: 1.55em;
+	}
+}
+@media screen and (min-width:1024px) {
+	.threeDetails{
+		line-height: 1.85em;
+	}
+}
+
+.barBackground, .contentNameLbrace, .contentNameRbrace, .contentNameLabel, .statusBars, 
+.statusBarsLabel, .barText, .postfixSymbol, .contentRparentheses, .contentLparentheses, .details, .parentheses  {
 	display: inline-block;
 }
 
-.detail-current {
+.night-mode {
+	background-color: #222;
+	color: white;
 }
 
-.detail-min-max, .detail-governor, .detail-ramtotal, .detail-speedtxt {
-	position: relative;
-	top: 7px;
-}
-
-.detail-speedtxt {
-	display: block;
-}
-
-.detail-governor {
-	position: relative;
-	top: 14px;
-}
-
-/*-------------------- END STATS -----------------*/
-/*-------------------- START WEATHER -----------------*/
-.weather {
-	width: 50%;
-	float: right;
-    position: relative;
-    top: -130px;
-}
-.weather2 {
-	float: right;
-	position: relative;
-}
-.weatherlabel {
-    position:  relative;
-    color: white;
-    font-size: 16px;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.9);
-}
-
-#weatherimg {
-	float:left;
-}
-#weatherdetails {
-	float:right;
-	height: 128px;
-}
-#weatherupdated {
-
-}
-
-.wlist {
-	list-style: none;
-	-webkit-padding-start: 0;
-	-webkit-margin-before: 2.2em;
-}
-.wlist > li {
-	
-}
-/*-------------------- END WEATHER -----------------*/
 
 
-.doughnutinner {
-	position:absolute;
-	top: 50px;
-	left:47px;
-	font-weight:900;
+
+
+
+
+/*============================================*/
+.anim {
+	opacity: 0 !important;
+	width: 0 !important;
 }
-
-/*--------------------- MEDIA QUERY -----------------*/
-
-@media screen and (max-width:890px) {
-	.pilogo {
-		font-size:70px;
-	}
-	
-		#logo-area {
-		margin-top:15px;
-	}
-	.weather {
-		top:-121px;
-	}
-	#imgweather {
-		width: 89px;
-		margin-top:15px;
+.animin {
+	width: 100px;
+}
+@media screen and (min-width: 1024px) {
+	.animin {
+		width: 300px;
 	}
 }
-
-@media screen and (max-width:768px) {
-	.pilogo {
-		font-size: 60px;
-	}
-	
-	#logo-area {
-		margin-top:25px;
-	}
-	
-		#imgweather {
-		
-	}
-}
+/*============================================*/
 
 

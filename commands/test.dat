@@ -1,1 +1,1 @@
-4.9:49:11.5464:0:0:700mhz:56:428
+{"cpu": {"percent_used":"3.8","current_frequency":"700","temperature":"48"},"ram": {"used":"40","free":"444","total":"496948"},"net":{"upload":"74","download":"52"}}

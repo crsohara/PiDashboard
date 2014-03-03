@@ -2,13 +2,15 @@
 
 	switch($_SERVER['QUERY_STRING']) {
 		case 'getCpuRamNetData':
-			$cpustats = exec('commands/getcpu.sh');
+			//$cpustats = exec('commands/getcpu.sh');
+			//$cpustats = file_get_contents('commands/test.dat');
+			$cpustats = file_get_contents('/run/shm/pidash.dat');
 			echo $cpustats;
-			//echo file_get_contents("commands/cpu_ram_net.data");
 			break;
 			
-		case 'getCpuRamNetDetails':
-			
+		case 'getCpuRamNetStaticData':
+			$staticData = exec('commands/getcpufreq.sh');
+			echo $staticData;
 			break;
 			
 		case 'getUptime':
@@ -17,6 +19,10 @@
 			
 		case 'getStuff':
 			echo exec('commands/getStats.sh');
+			break;
+
+		case 'getCpuDetails':
+			echo exec('commands/getcpufreq.sh cpu_details');
 			break;
 	}
 
